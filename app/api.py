@@ -14,12 +14,13 @@ async def predict(file: UploadFile = File(...)):
     with open(local_filename, 'wb') as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    # Llamada al script de predicción
-    test = subprocess.Popen(["python", "modelo/prediction.py", "--model=best.pt", "--input=video_bonito.mp4"], stdout=subprocess.PIPE)
+    # Asegúrate de que la ruta al modelo y al archivo de entrada sean correctas
+    test = subprocess.Popen(["python", "modelo/prediction.py"], stdout=subprocess.PIPE)
     output = test.communicate()[0]
 
     tiempos = []
-    with open('tiempos_goles.txt') as f:
-        tiempos = [line.strip().split(':')[-1] for line in f.readlines()]
+    # Asegúrate de que la ruta al archivo tiempos_goles.txt sea la correcta
+    with open('modelo/tiempos_goles.txt') as f:
+        tiempos = [line.strip() for line in f.readlines()]
 
     return {'prediction': tiempos}
