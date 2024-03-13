@@ -31,16 +31,7 @@ deepsort = None
 def init_tracker():
     global deepsort
     cfg_deep = get_config()
-    # Obtén la ruta al archivo de configuración de la variable de entorno
-    config_path = os.getenv('DEEPSORT_CONFIG_PATH')
-    if config_path is None:
-        raise ValueError("DEEPSORT_CONFIG_PATH environment variable not set")
-    cfg_deep.merge_from_file(config_path)
-
-    # Asegúrate de que la clave de configuración para el checkpoint es correcta y obtén su ruta
-    checkpoint_path = cfg_deep.DEEPSORT.REID_CKPT
-    if not os.path.isfile(checkpoint_path):
-        raise FileNotFoundError(f"Checkpoint file not found at {checkpoint_path}")
+    cfg_deep.merge_from_file("deep_sort_pytorch/configs/deep_sort.yaml")
 
     deepsort= DeepSort(cfg_deep.DEEPSORT.REID_CKPT,
                             max_dist=cfg_deep.DEEPSORT.MAX_DIST, min_confidence=cfg_deep.DEEPSORT.MIN_CONFIDENCE,

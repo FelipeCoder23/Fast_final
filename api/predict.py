@@ -1,10 +1,13 @@
 import subprocess
 import cv2
+import os
+os.chdir("../yolov8/ultralytics/yolo/v8/segment/")
 
 def run_yolov5_detection(source):
+
     command = [
-        "python", "../yolov8/ultralytics/yolo/v8/segment/predict_detect.py",
-        "model=../yolov8/ultralytics/yolo/v8/segment/best2.pt",
+        "python", "predict_detect.py",
+        "model=best.pt",
         f"source={source}"
 
     ]

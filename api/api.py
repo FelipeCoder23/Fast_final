@@ -20,7 +20,7 @@ async def predict(file: UploadFile = File(...)):
 
     tiempos = []
     # Asegúrate de que la ruta al archivo tiempos_goles.txt sea la correcta
-    with open('../yolov8/ultralytics/yolo/v8/segment/detection_times.txt') as f:
+    with open('detection_times.txt') as f:
         tiempos = [line.strip() for line in f.readlines()]
 
-    return {'prediction': response}
+    return {'prediction': tiempos}
