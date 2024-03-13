@@ -5,6 +5,7 @@ import torch
 import argparse
 import time
 from pathlib import Path
+import os
 
 import cv2
 import torch
@@ -30,7 +31,16 @@ deepsort = None
 def init_tracker():
     global deepsort
     cfg_deep = get_config()
-    cfg_deep.merge_from_file("deep_sort_pytorch/configs/deep_sort.yaml")
+    # Obtén la ruta al archivo de configuración de la variable de entorno
+    config_path = os.getenv('DEEPSORT_CONFIG_PATH')
+    if config_path is None:
+        raise ValueError("DEEPSORT_CONFIG_PATH environment variable not set")
+    cfg_deep.merge_from_file(config_path)
+
+    # Asegúrate de que la clave de configuración para el checkpoint es correcta y obtén su ruta
+    checkpoint_path = cfg_deep.DEEPSORT.REID_CKPT
+    if not os.path.isfile(checkpoint_path):
+        raise FileNotFoundError(f"Checkpoint file not found at {checkpoint_path}")
 
     deepsort= DeepSort(cfg_deep.DEEPSORT.REID_CKPT,
                             max_dist=cfg_deep.DEEPSORT.MAX_DIST, min_confidence=cfg_deep.DEEPSORT.MIN_CONFIDENCE,
@@ -100,12 +110,12 @@ def draw_border(img, pt1, pt2, color, thickness, r, d):
 
     cv2.rectangle(img, (x1 + r, y1), (x2 - r, y2), color, -1, cv2.LINE_AA)
     cv2.rectangle(img, (x1, y1 + r), (x2, y2 - r - d), color, -1, cv2.LINE_AA)
-    
+
     cv2.circle(img, (x1 +r, y1+r), 2, color, 12)
     cv2.circle(img, (x2 -r, y1+r), 2, color, 12)
     cv2.circle(img, (x1 +r, y2-r), 2, color, 12)
     cv2.circle(img, (x2 -r, y2-r), 2, color, 12)
-    
+
     return img
 
 def UI_box(x, img, color=None, label=None, line_thickness=None):
@@ -147,7 +157,7 @@ def draw_boxes(img, bbox, names,object_id, identities=None, offset=(0, 0)):
         id = int(identities[i]) if identities is not None else 0
 
         # create new buffer for new object
-        if id not in data_deque:  
+        if id not in data_deque:
           data_deque[id] = deque(maxlen= 64)
         color = compute_color_for_labels(object_id[i])
         obj_name = names[object_id[i]]
@@ -211,7 +221,7 @@ class DetectionPredictor(BasePredictor):
 
         # Calcular el tiempo basado en el número de frame
         time_seconds = frame / 30.0  # Convertir el número de frame a segundos
-        #self.detections.append(time_seconds) 
+        #self.detections.append(time_seconds)
 
         self.data_path = p
         save_path = str(self.save_dir / p.name)  # im.jpg
@@ -227,7 +237,7 @@ class DetectionPredictor(BasePredictor):
             n = (det[:, 5] == c).sum()  # detections per class
             action_name = self.model.names[int(c)]  # Obtener el nombre de la acción
             log_string += f"{n} {action_name}{'s' * (n > 1)}, "
-    
+
         # Incluir el tiempo en el log_string
         log_string += f"at time {time_seconds:.2f}s, "
         # write
@@ -244,7 +254,7 @@ class DetectionPredictor(BasePredictor):
             oids.append(int(cls))
         xywhs = torch.Tensor(xywh_bboxs)
         confss = torch.Tensor(confs)
-          
+
         outputs = deepsort.update(xywhs, confss, oids, im0)
         if len(outputs) > 0:
             for i, output in enumerate(outputs):
@@ -255,11 +265,11 @@ class DetectionPredictor(BasePredictor):
                 time_formatted = f'{mins}:{secs:02d} min'  # Formato de tiempo como minutos:segundos
                 # Añade una tupla de acción y tiempo formateado a self.detections
                 self.detections.append((action_name, time_formatted))
-            
+
             bbox_xyxy = outputs[:, :4]
             identities = outputs[:, -2]
             object_id_list = outputs[:, -1]  # Cambié el nombre de la variable para evitar confusiones
-        
+
             draw_boxes(im0, bbox_xyxy, self.model.names, object_id_list, identities)
 
         return log_string
@@ -272,7 +282,7 @@ def predict(cfg):
     cfg.source = cfg.source if cfg.source is not None else ROOT / "assets"
     predictor = DetectionPredictor(cfg)
     predictor()
-    
+
     # Ahora escribimos en el archivo con el formato de "acción: tiempo"
     with open('detection_times.txt', 'w') as f:
         for action, time_str in predictor.detections:
@@ -280,11 +290,11 @@ def predict(cfg):
 
 if __name__ == "__main__":
     predict()
-    
+
     # Al leer, ya tenemos el formato deseado en cada línea
     with open('detection_times.txt', 'r') as f:
         detection_times = f.read().splitlines()
-    
+
     # Imprime cada detección formateada como "acción: tiempo"
     for detection in detection_times:
         print(detection)
