@@ -1,41 +1,25 @@
-# Proyecto de Análisis de Goles en Handball con IA
+# Handball Goal Scoring Analysis with AI
 
-## Descripción
-Este proyecto utiliza técnicas avanzadas de visión por computadora y aprendizaje profundo para automatizar la detección de goles en partidos de handball. Mediante la integración de YOLOv8 y DeepSORT, junto con FastAPI y Streamlit, este sistema identifica los momentos en que se anotan goles, mejorando la eficiencia del análisis de juego.
+Welcome to the AI-powered goal detection project in handball matches. Utilizing state-of-the-art computer vision and deep learning techniques, this system streamlines the goal analysis in handball by identifying goal-scoring moments with impressive accuracy.
 
-## Introducción
-El handball es un deporte en rápido crecimiento que, hasta la fecha, no ha explotado completamente las posibilidades que la IA ofrece para el análisis del juego. Este proyecto busca cerrar esa brecha, proporcionando una herramienta que ahorra tiempo a analistas deportivos al identificar automáticamente los goles.
+## Overview
+The application of AI in sports analysis is still in its nascent stages, particularly in handball. This project aims to bridge that gap, offering a time-saving tool for sports analysts by automating the detection of scored goals.
 
-## Tecnologías Utilizadas
-- **YOLOv8**: Para la detección en tiempo real de goles.
-- **DeepSORT**: Para el seguimiento avanzado de jugadores y balón.
-- **FastAPI**: Para crear una API robusta y eficiente.
-- **Streamlit**: Para desarrollar una interfaz de usuario interactiva.
+## Technologies
+- **YOLOv8**: For real-time goal detection.
+- **DeepSORT**: For enhanced player and ball tracking.
+- **FastAPI**: For a robust and efficient API.
 
-## Desarrollo
-### Obtención de Datos
-Se recopilaron y etiquetaron manualmente clips de partidos de handball para entrenar el modelo.
+## Development Process
+- **Data Collection**: Manually gathered and labeled handball match clips to train the model.
+- **Model Training**: Trained on an initial dataset of 3000 images, achieving 60-70% accuracy.
+- **Integration and Testing**: The model was integrated into a backend framework ready for further development and testing.
 
-### Entrenamiento del Modelo
-El modelo se entrenó con un conjunto inicial de 3000 imágenes, logrando una precisión del 60-70%.
+## Results & Future Work
+The system successfully demonstrated the capability to detect goals with significant accuracy, considerably cutting down manual analysis time. Future work involves improving the model with additional data and potentially exploring cloud deployment for easier access and scalability.
 
-### Integración y Pruebas
-Se integró el modelo con FastAPI y Streamlit, permitiendo pruebas en un entorno de usuario final.
 
-## Resultados
-La herramienta demostró ser capaz de detectar goles con una precisión significativa, reduciendo considerablemente el tiempo de análisis manual.
+## Further Information
+For more information or inquiries, feel free to contact me through [my GitHub profile](https://github.com/FelipeCoder23).
 
-## A Futuro
-Se planea mejorar el modelo con más datos y explorar su despliegue en la nube para facilitar el acceso y la escalabilidad.
 
-## Conclusiones
-Este proyecto ilustra el potencial de la IA en el análisis deportivo, abriendo puertas a nuevas investigaciones y aplicaciones en el handball y otros deportes.
-
-## Cómo Contribuir
-¡Tus contribuciones son bienvenidas! Consulta la sección de [Issues](#issues) para ver cómo puedes ayudar.
-
-## Licencia
-Este proyecto está bajo la licencia [MIT](LICENSE).
-
-## Contacto
-Para más información, puedes contactarme a través de [mi perfil de GitHub](https://github.com/tu_usuario).
